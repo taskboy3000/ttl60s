@@ -13,15 +13,16 @@ sub startup {
 				     load_user => sub { $self->load_user(@_) },
 				     validate_user => sub { $self->validate_user(@_) },
 				    });
+
   $self->sessions->default_expiration(86400);
   $self->make_routes;
-  
 }
 
 sub make_routes {
     my ($self) = @_;
     my $r = $self->routes;
     $r->get("/")->to("Root#index");
+    $r->post("/login")->to("Sessions#create");
 }
 
 sub load_user {
@@ -34,7 +35,7 @@ sub load_user {
 sub validate_user {
   my ($self, $app, $email, $password, $extradata) = @_;
   my $U = DB::Model::User->new;
-  my $found = $U->find(email => $email, $password_hash => $hash);
+  my $found = $U->find(email => $email, password_hash => $U->hash($password));
   my $uid=-1;
   if (@$found) {
     $uid = $found->[0]->id;

@@ -3,3 +3,9 @@
 
 <h2>Time To Live: SIXTY Seconds</h2>
 
+<%= form_for 'login', 'class' => "form" =>  begin %>
+  <%= label_for email => 'Email:' %>
+  <%= text_field 'email', class => 'form-control' %>
+  <%= submit_button 'Login', 'class' => 'btn btn-primary' %>
+<% end %>
+</form>

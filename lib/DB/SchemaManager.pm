@@ -79,21 +79,27 @@ sub is_change_applied {
 	$self->install_version_table;
     }
 
-    my $sql = sprintf("SELECT * FROM schema_versions WHERE filename = %s",
+    my $sql = sprintf("SELECT COUNT(*) FROM schema_versions WHERE filename = %s",
 		      $db->quote($file));
 
     my $sth = $db->prepare($sql);
 
     unless ($sth) {
-	warn($db->errstr);
+	warn($sth->errstr);
+        $db->disconnect;
 	return;
     }
 
     unless ($sth->execute) {
+        $db->disconnect;
 	die($sth->{Statement});
     }
 
-    return $sth->rows > 0;
+    my $row = $sth->fetchrow_arrayref;
+    $sth->finish;
+    $db->disconnect;
+
+    return $row->[0];
 } # end sub is_change_applied
 
 
@@ -201,7 +207,8 @@ sub current_version {
 sub available {
     my ($self) = @_;
     my $rc = eval {
-	$self->connection->db;
+	my $db = $self->connection->db;
+        $db->disconnect;
     };
     return defined $rc;
 }
@@ -213,76 +220,60 @@ sub MAX     { }
 
 =head1 NAME
 
-sb_db::schema_manager - A Moo Role for schema_managers
+DB::SchemaManager - A Moo Role for schema_managers
 
 =head1 SYNOPSIS
 
-  package sb_db::schema_manager::trackers;
-  use CPAN::sb_cpan_lib;
+  package DB::SchemaManager::ttl60s;
+
   use File::Slurp ('read_file');
-  use sb_db::connection::trackers;
+  use DB::Connection::ttl60s;
   use Moo;
-  with 'sb_db::schema_manager';
+  with 'DB::SchemaManager';
 
   around _build_connection => sub {
     my ($original, $self) = @_;
-    sb_db::connection::trackers->new(mode => $self->mode);
+    DB::Connection::ttl60s->new(mode => $self->mode);
   };
 
   around _build_changes_directory => sub {
-    if (!defined $main::SBTOOLS_ROOT) {
-        die("'$main::SBTOOLS_ROOT' is not defined");
-    }
 
-    return "$main::SBTOOLS_ROOT/etc/schemas/trackers/";
+    return "$ENV{APP_HOME}/schema/";
   };
 
   1;
 
 And later, to actually commit changes to the database:
 
-  sb_db::schema_manager::trackers->new->upgrade();
+  DB::SchemaManager::ttl60s->new->upgrade();
 
 =head1 DESCRIPTION
 
 This Moo Role to faciliate making schema changes on a particular
-C<sb_db::connection> class.
+C<DB::Connection> class.
 
 Schema changes are represented as files on disk that include only one complete
 SQL statment.  The names of the files determine the order in which the changes
 are applied to the associated database.  The order is strictly ascii-betical.
 
 To create a new schema_manager class, simply create a new Moo class that
-implements the <sb_db::schema_manager> role, which includes overriding the
+implements the <DB::SchemaManager> role, which includes overriding the
 builder routines for connection and changes_directory.
 
 =head2 Attributes
 
 =head3 connection
 
-Returns the C<sb_db::connection> object for this object.
+Returns the C<DB::Connection> object for this object.
 
 =head3 changes_directory
 
 This is the full path to the directory containing all the change files.  As a
 best practice, schema files should be kept in
-$SBTOOLS_DIR/etc/schemas/[DATABASE_NAME/.  Here is an example directory listing
+$ENV{APP_HOME}/schema/[DATABASE_NAME/.  Here is an example directory listing
 of etc/schemas/trackers/:
 
-  20160912_00_create_sbjobtrackersdaemons.sql
-  20160912_01_create_sbjobtrackersdeltaalertcriteria.sql
-  20160912_02_create_sbjobtrackerdeltaalerts.sql
-  20160912_03_create_sbjobtrackermovejobs.sql
-  20160912_04_create_sbjobtrackerprocessdeltaalertsjobs.sql
-  20160912_05_create_sbjobtrackerprunetrackerstatusjobs.sql
-  20160912_06_create_sbjobtrackers.sql
-  20160912_08_create_sbjobtrackersbruntestserroroccurrences.sql
-  20160912_09_create_sbjobtrackerssbruntestserrors.sql
-  20160912_10_create_sbjobtrackerscantrackersjobs.sql
-  20160912_11_create_sbjobtrackersendmailjobs.sql
-  20160912_12_create_sbjobtrackerstatus.sql
-  20160912_13_create_sbjobtrackerwakeupjobs.sql
-  20160912_14_create_sbjobtrackerworkqueue.sql
+20170220_01_create_users.sql
 
 =head3 versions
 

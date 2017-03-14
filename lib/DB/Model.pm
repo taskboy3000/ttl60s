@@ -213,6 +213,7 @@ sub count {
 
     my $sth = $db->prepare($sql);
     unless ($sth->execute) {
+        warn(sprintf("DEBUG> %s\n", $sth->errstr));
 	warn($sth->{Statement});
 	return;
     }
@@ -268,6 +269,7 @@ sub find {
     warn("$sql\n") if $ENV{TC_DEBUG};
 
     unless ($sth->execute) {
+        warn(sprintf("DEBUG> %s\n", $sth->errstr));
 	warn($sth->{Statement});
 	return;
     }
@@ -302,6 +304,7 @@ sub get_distinct_column_values {
 
     my $sth = $db->prepare($sql);
     unless ($sth->execute) {
+        warn("DEBUG> " . $sth->errstr . "\n");
 	warn($sth->{Statement});
 	return;
     }
@@ -360,6 +363,7 @@ sub delete {
     my $sth = $db->prepare($sql);
     warn("$sql\n") if $ENV{TC_DEBUG};
     unless ($sth->execute) {
+        warn(sprintf("DEBUG> %s\n", $sth->errstr));
 	warn($sth->{Statement});
 	return;
     }
@@ -425,12 +429,13 @@ sub save {
 
     my $sth = $db->prepare($sql);
     unless ($sth->execute) {
+        warn(sprintf("DEBUG> %s\n", $sth->errstr));
 	warn($sth->{Statement});
 	return;
     }
 
     # Need to get the new ID before the commit
-    $self->id($id || $db->{mysql_insertid});
+    $self->id($id || $db->last_insert_id(undef, undef, 'users', 'id'));
 
     $db->commit; # Resets the insertid
     $self->reset_dirty_attributes;
@@ -466,6 +471,7 @@ sub mass_update {
 
     my $sth = $db->prepare($sql);
     unless ($sth->execute) {
+        warn(sprintf("DEBUG> %s\n", $sth->errstr));
 	warn($sth->{Statement});
 	return;
     }
@@ -616,60 +622,52 @@ sub has_dirty_attributes {
 
 =head1 NAME
 
-sb_db::model - A Moo::Role for ORM models
+DB::Model - A Moo::Role for ORM models
 
 =head1 SYNOPSIS
 
-  # An example of a class using this Role
-  package sb_db::model::sbjobtracker_daemon;
+  # An example of a class using this
+  package DB::Model::User;
 
-  use CPAN::sb_cpan_lib;
-  use sb_db::connection::trackers;
+  use DB::Connection::ttl60s;
 
   use Moo;
 
-  use sb_db::column;
-  use sb_db::tablename;
-  extends 'sb_db::model';
+  use DB::Column;
+  use DB::Tablename;
+  extends 'DB::Model';
 
-  around _build_connection => sub { sb_db::connection::trackers->new };
+  around _build_connection => sub { DB::Connection::ttl60s->new };
 
-  tableName 'SbjobtrackerDaemons';
+  tableName 'ttl60s';
 
   column 'id';
-  column 'host';
-  column 'status';
-  column 'pool';
-  column 'arch';
+  column 'name';
   column 'updated_at';
   column 'created_at';
 
   1;
 
   # An example of instantiation
-  my $D = sb_db::model::sbjobtracker_daemon->new;
+  my $U = DB::Model::User->new;
 
   # An example of fetching all rows in the table
-  my $daemons = $D->find();
+  my $users = $U->find();
 
   # An example of filtering rows from the table
-  my $farm = $D->find(pool => "farm-deb8");
+  my $list = $U->find(name => "Joe");
 
   # An example of access column data in each model
-  for my $daemon (@$daemons) {
-     printf("ID: %d, host: %s\n", $daemon->id, $daemon->host);
+  for my $user (@$list) {
+     printf("ID: %d, name: %s\n", $user->id, $user->host);
   }
 
   # An example of updating an existing model
-  $daemon->pool("general");
+  $user->name("general");
   $daemon->save();
 
   # An example of creating a new model and persisting it
-  my $new = sb_db::model::sbjobtracker_daemon->new(host => "foo",
-                                                   pool => "farm-deb8",
-                                                   arch => GetArch(),
-                                                   status => "running",
-                                                  );
+  my $new = DB::Model::User->new(name => "foo");
 
   if (!$new->id) {
      warn("object is not yet persisted to the data store");
@@ -678,7 +676,7 @@ sb_db::model - A Moo::Role for ORM models
   my $id = $new->save;
 
   # An example of fetching a particular row with id = 1234
-  my $daemon = $D->get(1234);
+  my $user = $U->get(1234);
 
   # An example of deleting a model
   $new->delete;
@@ -692,7 +690,7 @@ connect to the database and all the SQL syntax are hidden behind an API that
 provides a consistent interface to row-level data.
 
 Access to data stored in tables happens through a model class that implements
-the sb_db::model role.  Each model is responsible for mapping column data of a
+the DB::Model role.  Each model is responsible for mapping column data of a
 particular table into an object instance of the model.  Models may also present
 methods that act on the entire table.  Typically, application business logic is
 often contained in custom methods of the model so that users of the model apply
@@ -722,7 +720,7 @@ work-around, but some performance testing is advised here.
 
 Once the database table has been created according to the L<MySQL Table
 Conventions>, the model class can be written.  At a minimum, a model author
-needs a L<sb_db::connection> to the database connecting the desired table, the
+needs a L<DB::Connection> to the database connecting the desired table, the
 name of the table and the names of the columns in that table.  These values are
 specified in the appropriate builder routines, which are overriden in the Role
 using the around() mechanism.
@@ -730,9 +728,9 @@ using the around() mechanism.
 Additionally, the author may wish to specify L<Associations> to other models,
 but this is not required.
 
-=head2 MySQL Table Conventions
+=head2 Table Conventions
 
-All tables managed by an sb_db::model are expected to have the following fields
+All tables managed by an DB::Model are expected to have the following fields
 with the following definitions:
 
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -754,7 +752,7 @@ include 'id', 'updated', 'created', although the order does not much matter.
 
 =item connection
 
-This is a L<sb_db::connection> object through which the handle to the database
+This is a L<DB::Connection> object through which the handle to the database
 is obtained.
 
 =item table_name
@@ -858,11 +856,11 @@ the database using the connection object.  See L<sb_db::connection> for details.
 
 =head3 db_start_of_day($unix_timestamp)
 
-See L<sb_db::connection> for details.
+See L<DB::Connection> for details.
 
 =head3 db_end_of_day($unix_timestamp)
 
-See L<sb_db::connection> for details.
+See L<DB::Connection> for details.
 
 =head2 Associations
 
@@ -874,22 +872,22 @@ has_many.
 
 Creating an association is done inside the model class like this:
 
-  package sb_db::model::foo
+  package DB::Model::foo
   use Moo;
 
-  use sb_db::association;
-  use sb_db::column;
-  use sb_db::tablename;
-  extends 'sb_db::model';
+  use DB::Association;
+  use DB::Column;
+  use DB::Tablename;
+  extends 'DB::Model';
 
   tableName 'Foo';
   column 'id';
 
-  belongs_to "bar" => (related_to => "sb_db::model::bar",
+  belongs_to "bar" => (related_to => "DB::Model::bar",
                        join_conditions => [[ "me.bar_id" => "related.id" ]]
                       );
 
-  has_many "bazes" => (related_to => "sb_db::model::baz",
+  has_many "bazes" => (related_to => "DB::Model::baz",
                        join_conditions => [[ "me.id" => "related.foo_id" ]]
                       );
 

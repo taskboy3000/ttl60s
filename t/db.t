@@ -10,15 +10,15 @@ unless ($schema->available) {
   ok(1, "Schema is unavailable");
 }
 
+ok($schema,             "Manager object");
+ok($schema->upgrade(1), "Pending changes");
 printf(
        "Connected to %s\n",
        $schema->connection->database,
       );
-ok($schema,             "Manager object");
-ok($schema->upgrade(1), "Pending changes");
 
 if (1) {
-  $schema = DB::SchemaManager::TTL60S->new(mode => "staging");
+  $schema = DB::SchemaManager::TTL60S->new;
   my $rc = $schema->upgrade();
   ok($rc, "Commit changes");
   if ($rc) {
@@ -29,14 +29,15 @@ if (1) {
   }
 }
 
+
 if (1) {
   my $U = DB::Model::User->new;
   ok($U, "User model");
   my $found = $U->find();
   ok($found, "Find works");
   my $new = DB::Model::User->new("email" => 'jjohn@taskboy.com', password_hash => $U->hash('secret'));
-  
-  ok($new->save(), "Creation");
+  my $id = $new->save();
+  ok($id, "Creation: $id");
   ok($new->delete, "Deletion");
 }
 
