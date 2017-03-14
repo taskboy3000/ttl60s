@@ -2,10 +2,6 @@ package DB::Tablename;
 use strict;
 use warnings;
 
-# @EXPORT = qw();  for sbcheckuses
-use CPAN::sb_cpan_lib;
-
-#-------------------------------------------------------------------------------
 # Import
 #-------------------------------------------------------------------------------
 # based on: http://cpansearch.perl.org/src/CELOGEEK/MooX-Options-4.018/lib/MooX/Options.pm

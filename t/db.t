@@ -3,6 +3,7 @@ use Mojo::Base -strict;
 use Test::More;
 use Test::Mojo;
 use DB::SchemaManager::TTL60S;
+use DB::Model::User;
 
 my $schema = DB::SchemaManager::TTL60S->new;
 unless ($schema->available) {
@@ -28,5 +29,15 @@ if (1) {
   }
 }
 
+if (1) {
+  my $U = DB::Model::User->new;
+  ok($U, "User model");
+  my $found = $U->find();
+  ok($found, "Find works");
+  my $new = DB::Model::User->new("email" => 'jjohn@taskboy.com', password_hash => $U->hash('secret'));
+  
+  ok($new->save(), "Creation");
+  ok($new->delete, "Deletion");
+}
 
 done_testing();
