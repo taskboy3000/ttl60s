@@ -1,0 +1,6 @@
+% layout 'default';
+% title 'TTL: 60s';
+
+<h2>Time To Live: SIXTY Seconds</h2>
+
+<p>Your dashboard</p>

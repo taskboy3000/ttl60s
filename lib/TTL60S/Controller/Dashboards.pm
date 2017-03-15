@@ -5,7 +5,7 @@ use Mojo::Base 'Mojolicious::Controller';
 sub index {
   my $self = shift;
 
-  my %vars; 
+  my %vars;
   $self->render(%vars);
 }
 

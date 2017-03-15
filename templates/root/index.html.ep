@@ -6,6 +6,9 @@
 <%= form_for 'login', 'class' => "form" =>  begin %>
   <%= label_for email => 'Email:' %>
   <%= text_field 'email', class => 'form-control' %>
+  <%= label_for password => 'Password:' %>
+  <%= password_field 'password', class => 'form-control' %>
+
   <%= submit_button 'Login', 'class' => 'btn btn-primary' %>
 <% end %>
 </form>

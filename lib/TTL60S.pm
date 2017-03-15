@@ -15,6 +15,7 @@ sub startup {
 				    });
 
   $self->sessions->default_expiration(86400);
+  $self->sessions->cookie_name("ttl60s");
   $self->make_routes;
 }
 
@@ -23,6 +24,7 @@ sub make_routes {
     my $r = $self->routes;
     $r->get("/")->to("Root#index");
     $r->post("/login")->to("Sessions#create");
+    $r->get("/dashboard")->to("Dashboards#index");
 }
 
 sub load_user {
