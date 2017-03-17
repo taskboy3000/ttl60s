@@ -1,14 +1,13 @@
 % layout 'default';
 % title 'TTL: 60s';
 
-<h2>Time To Live: SIXTY Seconds</h2>
 
 <%= form_for 'login', 'class' => "form" =>  begin %>
   <%= label_for email => 'Email:' %>
-  <%= text_field 'email', class => 'form-control' %>
+  <%= text_field 'email', class => 'form-control', required => 'required' %>
   <%= label_for password => 'Password:' %>
-  <%= password_field 'password', class => 'form-control' %>
-
+  <%= password_field 'password', class => 'form-control', required => 'required' %>
+  <br>
   <%= submit_button 'Login', 'class' => 'btn btn-primary' %>
 <% end %>
 </form>

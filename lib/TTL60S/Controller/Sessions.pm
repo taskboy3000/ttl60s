@@ -6,18 +6,18 @@ sub create {
   my $self = shift;
   my $app = $self->app;
   my ($email, $password) = ($self->param("email"), $self->param("password"));
-  
+
   # try to validate the user
   if (my $id = $app->authenticate($email, $password)) {
       $app->log->debug("Yes!");
       $self->session("user_id" => $id);
-      
+
       # redirect to game dashboard
       return $self->redirect_to($self->url_for("dashboard"));
-  } else {
-      $app->log->debug("No!");
-      
   }
+  $app->log->debug("No!");
+  $self->flash("info" => "Account/password is incorrect");
+  return $self->redirect_to($self->url_for("/"));
 
 }
 

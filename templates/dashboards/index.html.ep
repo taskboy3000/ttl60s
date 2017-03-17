@@ -1,6 +1,19 @@
 % layout 'default';
 % title 'TTL: 60s';
 
-<h2>Time To Live: SIXTY Seconds</h2>
+<div style="min-height: 30"px;" class="bg-info">
+    <marquee>tactical info</marquee>
+</div>
+<div style="min-height: 200px;" class="bg-success">
+    current sitrep
+</div>
+<br>
+<div class="bg-warning" style="min-height:150px">
+    <br>
+    <div class="btn-group text-center" role="group">
+        <button class="btn btn-default">1</button>
+        <button class="btn btn-success">2</button>
+        <button class="btn btn-danger">3</button>
+    </div>
+</div>
 
-<p>Your dashboard</p>
