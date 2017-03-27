@@ -26,7 +26,7 @@ column 'updated_at';
 #-------------
 sub hash {
     my ($self, $string) = @_;
-    return sha256_hex($string);
+    return sha256_hex($self->secret . $string);
 }
 
 1;

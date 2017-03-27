@@ -1,6 +1,7 @@
 package DB::Model;
 use strict;
 use warnings;
+use File::Slurp;
 
 use Moo;
 
@@ -9,7 +10,7 @@ use Moo;
 #-------------------------------------------------------------------------------
 has dirty_attributes => (is => 'ro', lazy => 1, builder => 1);
 has connection   => (is => 'ro', lazy => 1, builder => 1);
-
+has secret => (is => 'ro', lazy => 1, builder => 1);
 #------------------------------------------------------------------------------
 # Builders
 #------------------------------------------------------------------------------
@@ -29,6 +30,19 @@ sub _build_dirty_attributes {
     my ($self) = @_;
     my %attrs = map { $_ => 0 } @{$self->columns};
     return \%attrs;
+}
+
+
+sub _build_secret {
+    my ($self) = @_;
+    
+    my $secrets_file = "$ENV{APP_HOME}/ttl60s.secrets";
+    if (-e $secrets_file) {
+        my @contents = read_file($secrets_file);
+        return $contents[0];
+    }
+
+    return "";
 }
 
 #------------------------------------------------------------------------------
@@ -615,6 +629,7 @@ sub has_dirty_attributes {
 #-------------------------------------------------------------------------------
 # CLASS METHODS
 #-------------------------------------------------------------------------------
+
 
 1;
 
