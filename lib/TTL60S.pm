@@ -7,9 +7,11 @@ use File::Slurp;
 # This method will run once at server start
 sub startup {
   my $self = shift;
-
-  $self->init_secret();
-
+  eval {
+      $self->init_secret();
+  } or do {
+      $self->app->log->debug($@);
+  };
   $self->sessions->default_expiration(86400);
   $self->sessions->cookie_name("ttl60s");
 
@@ -29,6 +31,7 @@ sub make_routes {
     $r->post("/login")->to("Sessions#create");
     $r->delete("/logout")->to("Sessions#destroy");
     $r->get("/dashboard")->over(authenticated => 1)->to("Dashboards#index");
+    $r->any("*")->to(cb => sub { my ($self) = @_; $self->redirect_to("/") });
 }
 
 
@@ -65,6 +68,7 @@ sub validate_user {
 
 sub init_secret {
     my ($self) = @_;
+
     my $secrets_file = "$ENV{APP_HOME}/ttl60s.secret";
 
     if (-e $secrets_file) {

@@ -2,3 +2,4 @@
 local/
 cpanfile.snapshot
 data/
+ttl60s.secret

@@ -19,7 +19,8 @@
                 </button>
                 <a class="navbar-brand" href="#">TTL:60S</a>
             </div>
-            <% if ($self->is_user_authenticated) { %>
+
+            <% if ($self->is_user_authenticated()) { %>
             <div class="collapse navbar-collapse" id="nav-controls">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
@@ -29,7 +30,7 @@
                     </li>
                 </ul>
             </div>
-            <% end %>
+            <% } %>
         </nav>
     
         % if (flash 'info') { 
