@@ -4,5 +4,5 @@ requires 'DBI';
 requires 'DBD::SQLite';
 requires 'Digest::SHA';
 requires 'File::Slurp';
-requires 'Mojolicious::Plugin::Authentication';
+
 

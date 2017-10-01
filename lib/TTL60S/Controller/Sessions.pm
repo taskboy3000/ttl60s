@@ -5,18 +5,26 @@ use Mojo::Base 'Mojolicious::Controller';
 sub create {
   my $self = shift;
   my $app = $self->app;
+  my $log = $self->app->log;
+  
   my ($email, $password) = ($self->param("email"), $self->param("password"));
 
   # return $self->no_auth unless $self->valid_csrf;
 
   # try to validate the user
-  if (my $id = $app->authenticate($email, $password)) {
-      $app->log->debug("Login user[$id]: $email");
-      $self->session("user_id" => $id);
-
+  warn(sprintf("%s: \$app is %s\n", ref $self, $app));
+  if ($app->authenticate($email, $password)) {
+    warn("Auth succeeded\n");
+    my $user = $app->current_user;
+    if ($user) {
+      $log->debug(sprintf("Login user[%d]: %s", $user->id, $user->email));
+      $self->session("user_id" => $user->id);
       # redirect to game dashboard
       return $self->redirect_to($self->url_for("dashboard"));
+    }
+    
   }
+
   $app->log->debug("Bad username/password");
   $self->flash("info" => "Account/password is incorrect");
   return $self->redirect_to($self->url_for("/"));

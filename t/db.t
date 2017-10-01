@@ -30,14 +30,23 @@ if (1) {
 }
 
 
-if (0) {
+if (1) {
   my $U = DB::Model::User->new;
   ok($U, "User model");
   my $found = $U->find();
-  ok($found, "Find works");
-  my $new = DB::Model::User->new("email" => 'jjohn@taskboy.com', password_hash => $U->hash('secret'));
-  my $id = $new->save();
-  ok($id, "Creation: $id");
+  ok(@$found, "Find works");
+
+  if (1) {
+    for my $user (@$found) {
+      printf("%3d: %s\t%s\n", $user->id, $user->email, $user->password_hash);
+    }
+  }
+  
+  if (0) { 
+    my $new = DB::Model::User->new("email" => 'jjohn@taskboy.com', password_hash => $U->hash('secret'));
+    my $id = $new->save();
+    ok($id, "Creation: $id");
+  }
 }
 
 done_testing();

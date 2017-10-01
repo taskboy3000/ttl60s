@@ -1,26 +1,29 @@
+# -*- cperl -*-
 package TTL60S;
 use Mojo::Base 'Mojolicious';
-use Mojolicious::Plugin::Authentication;
+use Mojolicious::Plugin::MyAuth;
 use DB::Model::User;
 use File::Slurp;
 
 # This method will run once at server start
 sub startup {
   my $self = shift;
+  
   eval {
       $self->init_secret();
   } or do {
       $self->app->log->debug($@);
   };
+  
   $self->sessions->default_expiration(86400);
   $self->sessions->cookie_name("ttl60s");
 
-  $self->plugin('authentication' => {
-				     autoload_user => 1,
-				     session_key => 'user_id',
-				     load_user => sub { $self->load_user(@_) },
-				     validate_user => sub { $self->validate_user(@_) },
-				    });
+  $self->plugin('Mojolicious::Plugin::MyAuth' => {
+						  autoload_user => 1,
+						  session_key => 'user_id',
+						  load_user => \&load_user,
+						  validate_user => \&validate_user,
+						 });
   $self->make_routes;
 }
 
@@ -36,32 +39,33 @@ sub make_routes {
 
 
 sub load_user {
-    my ($self, $app, $uid) = @_;
-    my $log = $self->app->log;
-    
+    my ($c, $uid) = @_;
+    my $app = $c->app;
     my $U = DB::Model::User->new;
 
-    my $user = $U->get($uid);
-    if ($user) {
-        $log->debug("Load user $uid -> " . $user->email);
-    } else {
-        $log->debug("No user found for $uid");
+    if ($uid) {
+      return $U->get($uid);
     }
 
-    return $user;
+    $app->log->warn("NO USER FOR ID $uid\n");    
+    return;
 }
 
 
 sub validate_user {
-  my ($self, $app, $email, $password, $extradata) = @_;
-
+  my ($c, $email, $password, $extradata) = @_;
+  my $app = $c->app;
+  
   my $U = DB::Model::User->new;
-  my $found = $U->find(email => $email, password_hash => $U->hash($password));
+  my $hash = $U->hash($password);
+  my $found = $U->find(email => $email, password_hash => $hash);
   my $uid=-1;
 
-  if (@$found) {      
-    $uid = $found->[0]->id;
+  if (@$found) {
+      return $found->[0]->id;
   }
+
+  $app->log->warn("Cannot find email '$email' with pw hash '$hash'");
   return $uid;
 }
 
