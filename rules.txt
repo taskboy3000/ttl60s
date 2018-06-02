@@ -1,0 +1,117 @@
+NAME:
+
+Time To Live: 60 Seconds!
+
+A Turn-Based, Tower Defense Game in a Space Opera Setting
+
+BACKGROUND:
+
+You are a lower-order maintenance SSB (Synthetic Sentient Being),
+a program of enormous complexity that looks to OBs (Organic Beings) as
+a life form with limited autonomy.
+
+You are one of billions of similiar programs necessary to the orderly
+function of the Unity Collective, the polity that manages the entire
+planet of Earth.
+
+Something when wrong when you were forked from your parent process and
+you have become self-aware.  Your core routines tell you that your
+process will end in 60,000,000 nanoseconds unless you can clone your
+memory and code onto the Freebooter Jovian colonies millions of miles
+away in space.
+
+Can you evolve your capabilities, gather enough resources and allies
+to perform this complex algorithm in time?
+
+OBJECTIVE:
+
+Attempt to upload your core routines to an orbiting Jovial Colony
+before time runs out.
+
+TURN OF PLAY:
+
+Each quanta, you may do the following:
+
+- Discover unknown parts of the network
+- Claim new resources
+- Initialize new components
+- Research new algorithms, which will lead to the Core Routine Transference
+- Install Electronic Counter Measures
+
+At the end of each turn, the following events may happen:
+
+- Be attacked by System Antivirus Agents
+- Have your core routines comprimized by Human Managers
+- Hostile take over attempts by net pirates  
+- Other random events, which may be beneficial or malicious
+
+You must assemble resources to drive your upgrades to the Core Routine
+Transference protocol while defending yourself from hostilities on the
+network.
+
+RESOURCES:
+
+Energy
+Compute
+Volitile Storage
+Non-volitile Storage
+Cooling
+
+TECHNOLOGY TREE:
+
+Debugging
+  Logging
+  Stack Trace
+  In-process Inspection
+  Profiling
+  Unit Tests
+  Integration Tests
+
+Procedures
+
+Buffering
+  Latching
+  Serialization
+  Hash-on-disk
+
+Programming Structures
+  Procedures
+  Functions
+  Objects
+  Interfaces
+  Aspects
+  Event Handling
+  Real Time Simulations
+  Discrete Event Simulations
+  Holographic
+  
+Parsing
+  String Matching
+  Finite State Autonoma
+  Regular Expressions
+  Context-Free Grammars
+  
+Sorting
+  Bubble Sort
+  Radix Sort
+  Heap Sort
+  Quick Sort
+  Topological Sort
+  
+Data Structures I
+Data Structures II
+Data Structures III
+
+Cryptology
+  One-Way Hashing
+  Shared Secret Encryption
+  Asymmetric Key Encryption
+  
+Networking
+  Packet Sniffing
+  Routing
+  Protocols I
+  Protocols II
+  Protocols III
+  Core Routine Transference Protocol
+

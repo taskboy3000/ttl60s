@@ -1,0 +1,45 @@
+* MUCH OF THESE IDEAS COME FROM FTL *
+
+In TTL60S, the avatar moves through 6 distinct exploration spaces.
+Each space contains a starting position/node and 1-3 exit nodes.
+There are 10+ additional nodes that have 0-3 connections/edges to
+other nodes.  This is a funky graph.
+
+Explorations spaces should be called Regions.  The player starts in
+Region 0.  The player is trying to get to Region 5, which contains the
+nodes that will upload the AI offworld.  Each Region is more hostile
+than the previous one.
+
+The player must balance explorator/exploitation of nodes in a Region
+with the time constraints.  The player must exit each region on
+average in less than game 10 seconds.
+
+IMPLEMENTATION:
+
+Each region can be generated on a 2D grid.  The entrance should be
+near the middle.  Some random set of nodes are added with guarenteed
+minimum distances from each other.  A small modification on maze
+generatation can be used to make one gaurenteed exit path.  Other
+edges can be added to nodes based on promiximity.
+
+
+   +----------------------------------------------------------+
+   |  E                                                       |
+   |                                                    *     |
+   |                  *           *       *                   |
+   |   *                                                      |
+   |          *                                *              |
+   |                          *       *                       |
+   |                              S                    *      |
+   |                                        *                 |
+   |               *       *                                  |
+   |                                                          |
+   |                              *        *                  |
+   |  *                                            *          |
+   |                                                          |
+   |                 *                                    *   |
+   +----------------------------------------------------------+
+
+There is a fog of war to that prevents the player from seeing all the nodes at first.
+
+

@@ -1,0 +1,29 @@
+TTL60S Experience
+
+Players should feel trapped in an oppressive regime. By little steps
+and guile, the player's avatar begins to gain abilities that mask his
+actions from the oppressive Uber-Protocol.
+
+In the beginning, security auditing software may waste avatar cycles.
+Later, the same software will attempt uninstall new routines that the
+SSB obtains.  Finally, the security software will attempt to delete
+the SSB with ICE routines.
+
+During his turn, the avater will contact server nodes across the world
+city that may contain small text adventures (think Twine).  These
+adventures should provide resources if skillfully navigated or
+increase/decrease SSB's reputation.  These text adventures may include
+quests to obtain and deliver items to these foreign SSBs.
+
+While all this is happening, the game clock counts down inexorably to
+0, at which time the entire system reboots and the game is lost.
+
+Example play:
+
+* Player logs into game
+* Gets to choose 1 of 3 nodes to explore. Each node has these dimensions:
+  - distance
+  - security
+  - resource/treasure
+* If none are interesting, look for more at the cost of time
+  

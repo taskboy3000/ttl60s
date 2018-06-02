@@ -1,0 +1,97 @@
+How to Procedurally Generate Quests, a Exploration
+
+This essay represents an attempt to work through various styles of
+quests found in various types of tabletop and computer games.  By
+quests, I am referring to optional activities a player may perform in
+additional to the normal "game loop" that has outcomes ranging from
+harmful to beneficial.
+
+A desirable outcome of this exploration is the design of a new
+procedure that generate more interesting quests for narrative-heavy
+games.  Ideally, this procedure would be one that even I could
+implement.
+
+I. Dungeons and Dragons-style
+
+In the context of pen and paper role-playing games, side quests take
+on infinite variety and complexity.  Side quests can be extended
+dynamically if the players are enjoying themselves.  Additionally, the
+level of difficulty can be dynamically adjusted based on the enjoyment
+of the players.
+
+Side quests may be set aside if new side quests seem more interesting.
+The consequences the actions of the players during a side quest can
+have any amount of affect on the campaign that the Dungeon Master
+deems appropriate.  This affect ranges from apotheosis to none at all.
+
+Obviously, this ideal cannot easily be implemented
+computationally. Perhaps Deep Learning will address this deficiency in
+the future.
+
+
+II. Diablo I-style
+
+In the original Diablo, there were a set of around 10 optional side
+quests in the form of statically created map fragments.  Only 3-4 of
+these optional side quests could appear in any one instance of the
+game, but this provided a satisfying replayability to the game.
+
+Since each level map of Diablo is generated on-demand, the side quest
+parts of the map would appear in different locations in different
+games.
+
+The advantage of this style of side quest is that it is
+straight-forward to implement.  Additionally, each quest could be
+finely tune and honed to create a superior play experience.
+
+The disadventage to such a system includes limited replayability and
+limits to scalability.  The first problem falls out naturally from
+probabilty.  Whenever you have to choose 3 or 4 from 10 options, you
+will, over the course of several games, began to see the same quests
+again.  Since each side quest has no variability other than its
+placement in the map, the fun of these quickly diminishes.  The
+scalability problem comes from the burden on the developer to generate
+and prefect these side quests.  There are only 10 possible side quest
+for very practical reasons.
+
+
+III. World of Warcraft-style
+
+In the World of Warcraft (WoW), single player gameplay consists of
+finding quest giving non-playing characters (NPC) and either
+retrieving N items for it or killing N type of M creatures.  This
+familiar trope comes rather directly from pen and paper role-playing
+games (RPG) in which low-level players, possessing little power, guile
+or influence, can do little more than clean out tavern basements of
+rats in exchange for a handful of coppers.
+
+The advantage to this style of quest is that these can be more easily
+procedurally generated. For example:
+
+  * Generate an NPC
+  * Decide on objective: collect or kill
+  * Decide on objective target: nearby creatures or items
+  * Decide on objective target amount: 10-50
+  * Decide on reward: gold/experience points
+  * Wait for player to return
+
+The twist in WoW is that being an MMO, the objectives need to
+regenerate fairly quickly so that many players have a chance of
+succeeded in collection.
+
+With a little thought, the locations in the world can be populated
+with more difficult creatures so that quests naturally scale to the
+level of the character.
+
+Even though quest could be procedurally generated in WoW, I believe
+that they are not.  Rather they are set pieces fixed in location and
+are always available (although each quest may be done only once per
+player).
+
+The formidable disadvantage of this system is that it quickly loses
+the interest of the player.  Rather than being interesting, such
+quests devolve into rote activities call grinding.  Grinding is done
+entirely of the outcome and not for the experience of performing the
+action.  Although every game involves grinding, boredom engendered by
+grinding should be minimized.
+

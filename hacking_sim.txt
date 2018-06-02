@@ -1,0 +1,58 @@
+Since the core or TTL60S is the avatar hacking other nodes, the
+following is an exploration of how that can be made into a game loop.
+
+THE FUNERAL QUEST WAY
+
+This would treat hacking as a form of stylized RPG combat. A node
+would have the following statistics:
+
+ - Armor/Defense:
+   - Network Firewall
+   - Anti-virus/Intrusion detection/Active internal scanning
+   - Specials (optional defenses):
+     - Honey Pot (Internal environment)
+     - ROM-based core memory (unhackable)
+     - error-correcting memory
+     - adaptive filesystem
+ - (optional) Counter-measures
+   - hack-back protocol
+
+Each node has a single Defense statistic that is a positive integer.
+Some nodes will have counter-measures that will cause the node to
+attack the avatar! Such counter-attacks reduces the defense of the
+avatar, but usually do not install software.  The acception to this
+are the ICE nodes of the P.R.O.T.O.C.O.L.  If ICE nodes can compromise
+the avatar, the game is over.
+
+The avatar has to use the following means to overcome the node defenses:
+
+   - Old software exploits
+   - Fuzzing network ports
+   - Sniffing network traffic
+   - man-in-the-middle attacks
+   
+Each kind of as a positive integer value.
+
+The success of a Hack attempt is:
+
+  P(success) = Attack/(Defense + Attack)
+
+This, of course, comes from FreeCiv and is the think I always use for
+combat since it is super easy to calculate and it scales well.
+
+When the avatar successfully "hacks" a node, it reducess the
+effectiveness of the defense, which makes future attacks more likely.
+
+It is possible to break up the attacks into two phazes:
+
+  - Hacks to get logon to the node
+  - Hacks that completely subborne the node
+
+The first is easier and faster. The avatar can install temporary
+software on the node which will aid exploration, but only last a
+limited time (the node will remove this software eventually).
+
+The second takes significantly longer, but the node will be completely
+loyal to the avatar.
+
+EVERY HACK ATTEMPT TAKES TIME, WHICH IS ALWAYS AGAINST THE PLAYER.
